@@ -1,0 +1,57 @@
+logging:
+  level:
+    # Change the logging level to suppress log spew regarding disabling of self-
+    # preservation mode
+    com.netflix.eureka.PeerAwareInstanceRegistry: ERROR
+    com.netflix.discovery.DiscoveryClient: FATAL
+
+spring:
+  application:
+    name: eureka
+#  cloud:
+#    config:
+#      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
+
+eureka:
+  instance:
+    leaseExpirationDurationInSeconds: 5
+    # Controls the frequency with which the lease renewal is sent to the peer Eureka
+    # server
+    leaseRenewalIntervalInSeconds: 3
+  server:
+    enableSelfPreservationMode: false
+    evictionIntervalTimerInMs: 1000
+    responseCacheAutoExpirationInSeconds: 3
+    responseCacheUpdateIntervalMs: 1000
+  client:
+    healthcheck:
+      enabled: true
+    registryFetchIntervalSeconds: 5
+
+---
+spring:
+  profiles: node-1
+
+server:
+  port: 8081
+
+eureka:
+  instance:
+    hostname: node-1
+  client:
+    serviceUrl:
+      defaultZone: http://node-2:8082/eureka
+
+---
+spring:
+  profiles: node-2
+    
+server:
+  port: 8082
+
+eureka:
+  instance:
+    hostname: node-2
+  client:
+    serviceUrl:
+      defaultZone: http://node-1:8081/eureka/
