@@ -12,20 +12,11 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<feign.version>8.10.0</feign.version>
 		<java.version>1.7</java.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<parent>
-		<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-starter-parent</artifactId>
-<!-- 		<version>Brixton.BUILD-SNAPSHOT</version> -->
-        <version>1.0.2.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
 
 	<modules>
 		<module>nos-demo-utils</module>
@@ -33,6 +24,19 @@
 		<module>nos-demo-service</module>
 		<module>nos-demo-service-client</module>
 	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-parent</artifactId>
+<!-- 				<version>Brixton.BUILD-SNAPSHOT</version> -->
+		        <version>1.0.2.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
