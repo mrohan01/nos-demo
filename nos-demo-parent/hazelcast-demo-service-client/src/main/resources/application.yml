@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: hazelcast-demo-service-client
+
+serverPortRange:
+  min: 10000
+  max: 10099
+
+eureka:
+  instance:
+    hostname: node-1
+    leaseExpirationDurationInSeconds: 10
+    # Controls the frequency with which the lease renewal is sent to the Eureka server
+    leaseRenewalIntervalInSeconds: 5
+    # Required in order to get the port from the configured port range for the service
+    # registration
+    nonSecurePort: 0
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://node-1:8081/eureka/,http://node-2:8082/eureka/
+
+hystrix:
+  command.default.execution.isolation.thread.timeoutInMilliseconds: 10000
+
+ribbon:
+  MaxAutoRetries: 3
+  MaxAutoRetriesNextServer: 3
+  OkToRetryOnAllOperations: true
+  ServerListRefreshInterval: 5000
+
+demo-service:
+  ribbon:
+    MaxAutoRetries: 3
+    MaxAutoRetriesNextServer: 3
+    OkToRetryOnAllOperations: true
+    ServerListRefreshInterval: 5000
