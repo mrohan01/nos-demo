@@ -1,6 +1,6 @@
 spring:
   application:
-    name: demo-service
+    name: nos-demo-service
   jackson:
     serialization:
       indent_output: true

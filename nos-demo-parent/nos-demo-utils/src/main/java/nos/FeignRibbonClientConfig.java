@@ -19,51 +19,51 @@ import feign.ribbon.RibbonClient;
 @Configuration
 public class FeignRibbonClientConfig {
 
-	public static class DelegatingSpringLBClientFactory
-		// extends CachingSpringLoadBalancerFactory
-	extends SpringLBClientFactory
-		{
+    public static class DelegatingSpringLBClientFactory
+            // extends CachingSpringLoadBalancerFactory
+            extends SpringLBClientFactory {
 
-		private SpringClientFactory factory;
+        private SpringClientFactory factory;
 
-		public DelegatingSpringLBClientFactory(SpringClientFactory factory) {
-			super(factory);
-			this.factory = factory;
-		}
+        public DelegatingSpringLBClientFactory(SpringClientFactory factory) {
+            super(factory);
+            this.factory = factory;
+        }
 
-//		public FeignLoadBalancer create(String clientName) {
-		public LBClient create(String clientName) {
+        // public FeignLoadBalancer create(String clientName) {
+        @Override
+        public LBClient create(String clientName) {
 
-			final LBClient client = super.create(clientName);
-//			final FeignLoadBalancer client = super.create(clientName);
+            final LBClient client = super.create(clientName);
+            // final FeignLoadBalancer client = super.create(clientName);
 
-			// Override the default load balancer creation, which sets the retry
-			// handler to a non-configured default retry handler.
-			client.setRetryHandler(buildRetryHandler(clientName));
+            // Override the default load balancer creation, which sets the retry
+            // handler to a non-configured default retry handler.
+            client.setRetryHandler(buildRetryHandler(clientName));
 
-			return client;
-		}
+            return client;
+        }
 
-		private RetryHandler buildRetryHandler(final String clientName) {
-			final IClientConfig clientConfig = factory.getClientConfig(clientName);
-			return new DefaultLoadBalancerRetryHandler(clientConfig);
-		}
-	}
+        private RetryHandler buildRetryHandler(final String clientName) {
+            final IClientConfig clientConfig = factory.getClientConfig(clientName);
+            return new DefaultLoadBalancerRetryHandler(clientConfig);
+        }
+    }
 
-	@Inject
-	private SpringClientFactory factory;
+    @Inject
+    private SpringClientFactory factory;
 
-//	@Bean
-//	@Primary
-//	public CachingSpringLoadBalancerFactory cachingLBClientFactory(
-//			SpringClientFactory factory) {
-//		return new DelegatingSpringLBClientFactory(factory);
-//	}
+    // @Bean
+    // @Primary
+    // public CachingSpringLoadBalancerFactory cachingLBClientFactory(
+    // SpringClientFactory factory) {
+    // return new DelegatingSpringLBClientFactory(factory);
+    // }
 
-	@Bean
-	public Client feignRibbonClient() {
-		final DelegatingSpringLBClientFactory springLBClientFactory = new DelegatingSpringLBClientFactory(factory);
-		final CachingLBClientFactory cachingLBClientFactory = new CachingLBClientFactory(springLBClientFactory);
-		return RibbonClient.builder().lbClientFactory(cachingLBClientFactory).build();
-	}
+    @Bean
+    public Client feignRibbonClient() {
+        final DelegatingSpringLBClientFactory springLBClientFactory = new DelegatingSpringLBClientFactory(factory);
+        final CachingLBClientFactory cachingLBClientFactory = new CachingLBClientFactory(springLBClientFactory);
+        return RibbonClient.builder().lbClientFactory(cachingLBClientFactory).build();
+    }
 }

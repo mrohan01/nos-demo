@@ -1,6 +1,6 @@
 spring:
   application:
-    name: demo-service-client
+    name: nos-demo-service-client
 
 serverPortRange:
   min: 10000

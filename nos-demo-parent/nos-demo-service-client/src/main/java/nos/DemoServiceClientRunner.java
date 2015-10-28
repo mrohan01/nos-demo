@@ -16,8 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class DemoServiceClientRunner {
 
-	public static void main(String[] args) throws Exception {
-		new SpringApplicationBuilder(DemoServiceClientRunner.class, EmbeddedServletContainerPortRangeConfig.class,
-				FeignRibbonClientConfig.class).web(true).run(args);
-	}
+    public static void main(String[] args) throws Exception {
+        new SpringApplicationBuilder(DemoServiceClientRunner.class, EmbeddedServletContainerPortRangeConfig.class,
+                FeignRibbonClientConfig.class).web(true).run(args);
+    }
 }
