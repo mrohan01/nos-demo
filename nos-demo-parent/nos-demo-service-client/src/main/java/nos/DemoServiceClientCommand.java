@@ -12,10 +12,10 @@ public class DemoServiceClientCommand {
 
 	@HystrixCommand(fallbackMethod = "fallback")
 	public String hello(int requestId) {
-		return client.handleRequest(requestId);
+		return "Success! (" + client.handleRequest(requestId) + ")";
 	}
 
 	public String fallback(int requestId) {
-		return "Failed over to client fallback method";
+		return "Failure! Fallback method invoked.";
 	}
 }

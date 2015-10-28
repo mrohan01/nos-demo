@@ -23,7 +23,7 @@ public class DemoService {
 	String handleRequest(final int requestId) {
 		LoggerFactory.getLogger(getClass()).info("[{}] Handling request...",
 				StringUtils.leftPad(String.valueOf(requestId), 6));
-		return "[" + nodeId + "] Success!";
+		return nodeId;
 	}
 
 	public static void main(String[] args) throws Exception {
