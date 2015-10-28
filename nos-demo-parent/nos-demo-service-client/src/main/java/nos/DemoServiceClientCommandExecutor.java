@@ -16,7 +16,7 @@ public class DemoServiceClientCommandExecutor {
 
 	private AtomicInteger requestId = new AtomicInteger(1);
 
-	@Scheduled(initialDelay = 10000, fixedRate = 3000)
+	@Scheduled(initialDelay = 10000, fixedRate = 1000)
 	public void invokeHello() {
 		final int nextRequestId = requestId.getAndIncrement();
 		final String response = client.hello(nextRequestId);
