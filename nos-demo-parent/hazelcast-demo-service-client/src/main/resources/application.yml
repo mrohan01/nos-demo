@@ -1,3 +1,7 @@
+#logging:
+#  level:
+#    com.netflix: DEBUG
+
 spring:
   application:
     name: hazelcast-demo-service-client

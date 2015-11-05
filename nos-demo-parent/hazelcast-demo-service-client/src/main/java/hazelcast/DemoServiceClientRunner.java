@@ -16,12 +16,15 @@ import nos.FeignRibbonClientConfig;
 @SpringBootApplication
 public class DemoServiceClientRunner {
 
-    public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(DemoServiceClientRunner.class,
+    public static void main(final String[] args) throws Exception {
+        final ConfigurableApplicationContext context = new SpringApplicationBuilder(DemoServiceClientRunner.class,
                 EmbeddedServletContainerPortRangeConfig.class, FeignRibbonClientConfig.class).web(true).run(args);
-        DemoServiceClientCommandExecutor executor = context.getBean(DemoServiceClientCommandExecutor.class);
-        executor.invoke();
-        context.stop();
-        System.exit(0);
+        try {
+            final DemoServiceClientCommandExecutor executor = context.getBean(DemoServiceClientCommandExecutor.class);
+            executor.invoke();
+        } finally {
+            context.stop();
+            System.exit(0);
+        }
     }
 }

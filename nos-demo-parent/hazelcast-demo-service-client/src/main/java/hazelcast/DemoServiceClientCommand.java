@@ -11,29 +11,41 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 @Named
 public class DemoServiceClientCommand {
 
+    private static void log(final int requestId, final String msg) {
+        LoggerFactory.getLogger(DemoServiceClientCommand.class).info("[{}] {}",
+                StringUtils.leftPad(String.valueOf(requestId), 6), msg);
+    }
+
     @Inject
     private DemoServiceClient client;
 
+    protected String cacheKey(final int requestId) {
+        return "demo";
+    }
+
+    protected String cacheKey(final int requestId, final String value) {
+        return "demo";
+    }
+
     @HystrixCommand
-    public String get(int requestId) {
-        String result = client.get(requestId);
+    // @CacheRemove(commandKey = "demo", cacheKeyMethod = "cacheKey")
+    public void evict(final int requestId) {
+        client.evict(requestId);
+        log(requestId, "EVICT SUCCESS");
+    }
+
+    @HystrixCommand
+    // @CacheResult(cacheKeyMethod = "cacheKey")
+    public String get(final int requestId) {
+        final String result = client.get(requestId);
         log(requestId, "GET SUCCESS (" + result + ")");
         return result;
     }
 
-    private void log(int requestId, String msg) {
-        LoggerFactory.getLogger(getClass()).info("[{}] {}", StringUtils.leftPad(String.valueOf(requestId), 6), msg);
-    }
-
     @HystrixCommand
-    public void set(int requestId, final String value) {
+    // @CacheRemove(commandKey = "demo", cacheKeyMethod = "cacheKey")
+    public void set(final int requestId, final String value) {
         client.set(requestId, value);
         log(requestId, "SET SUCCESS");
-    }
-
-    @HystrixCommand
-    public void evict(int requestId) {
-        client.evict(requestId);
-        log(requestId, "EVICT SUCCESS");
     }
 }

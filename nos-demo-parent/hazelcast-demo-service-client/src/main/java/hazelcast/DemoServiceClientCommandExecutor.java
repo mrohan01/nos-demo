@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang.Validate;
+import org.slf4j.LoggerFactory;
 
 @Named
 public class DemoServiceClientCommandExecutor {
@@ -17,18 +18,28 @@ public class DemoServiceClientCommandExecutor {
 
     public void invoke() {
 
-        String value = client.get(requestId.getAndIncrement());
-        Validate.isTrue("DEFAULT".equals(value));
+        try {
 
-        client.set(requestId.getAndIncrement(), "FIRST_UPDATE");
+            String value = client.get(requestId.getAndIncrement());
+            Validate.isTrue("DEFAULT".equals(value));
 
-        for (int i = 0; i < 10; i++) {
-            value = client.get(requestId.getAndIncrement());
+            client.set(requestId.getAndIncrement(), "FIRST_UPDATE");
+
+            for (int i = 0; i < 10; i++) {
+                value = client.get(requestId.getAndIncrement());
+                Validate.isTrue("FIRST_UPDATE".equals(value), value);
+            }
+
             Validate.isTrue("FIRST_UPDATE".equals(value), value);
+
+        } catch (final Exception e) {
+
+            LoggerFactory.getLogger(getClass()).error("Unable to execute request " + requestId.get(), e);
+
+        } finally {
+
+            client.set(requestId.getAndIncrement(), "DEFAULT");
+            client.evict(requestId.getAndIncrement());
         }
-
-        client.evict(requestId.getAndIncrement());
-
-        Validate.isTrue("FIRST_UPDATE".equals(value), value);
     }
 }
